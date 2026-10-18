@@ -1,6 +1,6 @@
 # Samgyupsal Ordering System
 
-A Android app for ordering and managing Korean BBQ dining, built for our **CC106 Application Development** project for //Sir Catindoy//.
+A Android app for ordering and managing Korean BBQ dining, built for our **CC106 Application Development** project for _Sir Catindoy_.
 
 ---
 
