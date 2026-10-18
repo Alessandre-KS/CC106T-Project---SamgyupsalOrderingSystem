@@ -28,6 +28,7 @@ public class BackendSyncManager {
 
     // Connected to live cloud backend on x10hosting
     public static String BASE_URL = "https://cc106tsamgyup-orders.x10.mx";
+    public static final String API_KEY = "samgyup-cc106-secure-token-2026";
 
     private static BackendSyncManager instance;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -468,6 +469,7 @@ public class BackendSyncManager {
         URL url = new URL(urlStr);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
+        conn.setRequestProperty("X-API-KEY", API_KEY);
         conn.setConnectTimeout(3000);
         conn.setReadTimeout(3000);
 
@@ -489,6 +491,7 @@ public class BackendSyncManager {
         URL url = new URL(urlStr);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("POST");
+        conn.setRequestProperty("X-API-KEY", API_KEY);
         conn.setConnectTimeout(3000);
         conn.setReadTimeout(3000);
         conn.setDoOutput(true);

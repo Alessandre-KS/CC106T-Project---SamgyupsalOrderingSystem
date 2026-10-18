@@ -2,7 +2,7 @@
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, X-API-KEY');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -119,6 +119,23 @@ if ($path === '' || $path === '/api' || $path === '/api/database/info' || $actio
         'databaseEngine' => 'Microsoft SQL Server Compact Edition (MS SQL CE) / MySQL',
         'databaseFile' => 'Database.sdf',
         'lastChecked' => gmdate('Y-m-d H:i:s \U\T\C')
+    ]);
+    exit;
+}
+
+// -------------------------------------------------------------
+// API Key Security Guard
+// -------------------------------------------------------------
+// Protects orders, timers, and database operations from public spam / unauthorized access.
+// Root health checks (/api and /api/database/info) remain accessible above for browser verification.
+define('API_SECRET_KEY', 'samgyup-cc106-secure-token-2026');
+
+$clientKey = $_SERVER['HTTP_X_API_KEY'] ?? $_SERVER['HTTP_X_API_TOKEN'] ?? $_GET['api_key'] ?? '';
+if ($clientKey !== API_SECRET_KEY) {
+    http_response_code(401);
+    echo json_encode([
+        'error' => 'Unauthorized: Missing or invalid API Key',
+        'message' => 'Access to this endpoint requires a valid X-API-KEY from the Samgyupsal Ordering System Android app.'
     ]);
     exit;
 }
