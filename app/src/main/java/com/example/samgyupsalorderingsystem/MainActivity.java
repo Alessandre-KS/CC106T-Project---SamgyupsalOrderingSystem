@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         BackendSyncManager.getInstance().syncPricing(null);
         BackendSyncManager.getInstance().syncAuth(null);
-        refreshOccupiedTables();
+        BackendSyncManager.getInstance().syncOrders(this::refreshOccupiedTables);
     }
 
     private void refreshOccupiedTables() {
@@ -194,14 +194,42 @@ public class MainActivity extends AppCompatActivity {
             if (isOccupied) {
                 tilTableCode.setError(formatted + " is currently occupied!");
                 new androidx.appcompat.app.AlertDialog.Builder(this)
-                        .setTitle("Table Occupied")
-                        .setMessage(formatted + " is currently dining with an active order.\n\nPlease select another table or consult staff for assistance.")
-                        .setPositiveButton("OK", null)
+                        .setTitle("Table Occupied • " + formatted)
+                        .setMessage(formatted + " has an active dining session in progress.\n\nAre you returning to this table?")
+                        .setPositiveButton("Resume Dining", (dialog, which) -> {
+                            resumeTableSession(formatted);
+                        })
+                        .setNegativeButton("Choose Different Table", (dialog, which) -> {
+                            refreshOccupiedTables();
+                        })
                         .show();
-                refreshOccupiedTables();
             } else {
                 navigateToMenu(formatted);
             }
+        });
+    }
+
+    private void resumeTableSession(String formatted) {
+        if (btnProceedMenu != null) btnProceedMenu.setEnabled(false);
+        BackendSyncManager.getInstance().syncOrders(() -> {
+            if (btnProceedMenu != null) btnProceedMenu.setEnabled(true);
+            BacksiteOrder order = OrderRepository.getInstance().getActiveInitialOrder(formatted);
+            SetMeal setMeal = SetMeal.SET_A;
+            int headCount = 2;
+            if (order != null) {
+                setMeal = SetMeal.fromString(order.getSetMeal());
+                headCount = order.getHeadCount();
+            } else if (etHeadCount != null && etHeadCount.getText() != null) {
+                try {
+                    headCount = Math.max(1, Integer.parseInt(etHeadCount.getText().toString().trim()));
+                } catch (NumberFormatException ignored) {}
+            }
+            Intent intent = new Intent(this, MenuActivity.class);
+            intent.putExtra(MenuActivity.EXTRA_TABLE_CODE, formatted);
+            intent.putExtra(MenuActivity.EXTRA_HEAD_COUNT, headCount);
+            intent.putExtra(MenuActivity.EXTRA_SET_MEAL, setMeal.name());
+            intent.putExtra(MenuActivity.EXTRA_HAS_ORDERED, true);
+            startActivity(intent);
         });
     }
 

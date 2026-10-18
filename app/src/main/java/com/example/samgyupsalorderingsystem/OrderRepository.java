@@ -61,6 +61,16 @@ public class OrderRepository {
         return false;
     }
 
+    public BacksiteOrder getActiveInitialOrder(String tableCode) {
+        if (tableCode == null) return null;
+        for (BacksiteOrder order : orders) {
+            if (tableCode.equalsIgnoreCase(order.getTableCode()) && !order.isAddon() && !order.isCheckedOut()) {
+                return order;
+            }
+        }
+        return null;
+    }
+
     public List<BacksiteOrder> getAllOrders() {
         return Collections.unmodifiableList(orders);
     }

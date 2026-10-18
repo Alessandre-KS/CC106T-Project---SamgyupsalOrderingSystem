@@ -7,6 +7,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
@@ -168,6 +169,24 @@ public class SetSelectionActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (hasOrdered) {
+                    Intent intent = new Intent(SetSelectionActivity.this, MenuActivity.class);
+                    intent.putExtra(MenuActivity.EXTRA_TABLE_CODE, tableCode);
+                    intent.putExtra(MenuActivity.EXTRA_HEAD_COUNT, headCount);
+                    intent.putExtra(MenuActivity.EXTRA_SET_MEAL, (currentSet != null ? currentSet : selectedSet).name());
+                    intent.putExtra(MenuActivity.EXTRA_HAS_ORDERED, true);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        });
     }
 
     private void updateSetCardPrices() {
@@ -234,6 +253,21 @@ public class SetSelectionActivity extends AppCompatActivity {
         }
         if (tvSelectedSetDesc != null) {
             tvSelectedSetDesc.setText(set.getTitle() + " • ₱" + pricePerPax + " × " + headCount + " Pax = ₱" + String.format("%,d", total));
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (hasOrdered) {
+            Intent intent = new Intent(this, MenuActivity.class);
+            intent.putExtra(MenuActivity.EXTRA_TABLE_CODE, tableCode);
+            intent.putExtra(MenuActivity.EXTRA_HEAD_COUNT, headCount);
+            intent.putExtra(MenuActivity.EXTRA_SET_MEAL, (currentSet != null ? currentSet : selectedSet).name());
+            intent.putExtra(MenuActivity.EXTRA_HAS_ORDERED, true);
+            startActivity(intent);
+            finish();
+        } else {
+            super.onBackPressed();
         }
     }
 }

@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -70,6 +71,7 @@ public class MenuActivity extends AppCompatActivity {
         }
 
         initViews();
+        setupBackPressHandling();
     }
 
     private void initViews() {
@@ -519,5 +521,38 @@ public class MenuActivity extends AppCompatActivity {
                     Toast.makeText(this, "Checkout request cancelled.", Toast.LENGTH_SHORT).show();
                 })
                 .show();
+    }
+
+    private void setupBackPressHandling() {
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                handleBackPress();
+            }
+        });
+    }
+
+    private void handleBackPress() {
+        boolean isDining = hasOrdered
+                || OrderRepository.getInstance().hasInitialOrder(tableCode)
+                || TableTimerManager.getInstance().isTimerStarted(tableCode);
+
+        if (isDining && !TableTimerManager.getInstance().isTableCheckedOut(tableCode)) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Active Dining Session")
+                    .setMessage("You are currently dining at " + tableCode + ".\n\nDo you want to return to the table entrance?\nYour active timer and meal order will continue running in the background.")
+                    .setPositiveButton("Return to Entrance", (dialog, which) -> {
+                        finish();
+                    })
+                    .setNegativeButton("Stay at Table", null)
+                    .show();
+        } else {
+            finish();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        handleBackPress();
     }
 }
