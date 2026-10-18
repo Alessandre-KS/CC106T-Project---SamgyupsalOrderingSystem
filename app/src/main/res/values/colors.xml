@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <!-- Modern Korean BBQ Dining Palette (Human Designer Grade) -->
+    <!-- Brand Primary: Warm Ember Red -->
+    <color name="primary">#C2410C</color>
+    <color name="primary_dark">#9A3412</color>
+    <color name="primary_light">#FFEDD5</color>
+    <color name="primary_container">#FFF7ED</color>
+    <color name="on_primary">#FFFFFF</color>
+
+    <!-- Deep Slate Charcoal Header / Brand Contrast -->
+    <color name="secondary">#18181B</color>
+    <color name="secondary_light">#71717A</color>
+    <color name="accent">#EA580C</color>
+    
+    <!-- Clean, Non-Muddy Surfaces -->
+    <color name="bg_light">#F8FAFC</color>
+    <color name="surface_card">#FFFFFF</color>
+    <color name="surface_variant">#F1F5F9</color>
+    
+    <!-- High-Legibility Typography Hierarchy -->
+    <color name="text_main">#0F172A</color>
+    <color name="text_secondary">#475569</color>
+    <color name="text_muted">#64748B</color>
+    <color name="divider_color">#E2E8F0</color>
+    <color name="border_subtle">#F1F5F9</color>
+    
+    <!-- Clean Status Colors (Refined, no harsh neon) -->
+    <color name="role_customer">#C2410C</color>
+    <color name="role_staff">#2563EB</color>
+    <color name="role_admin">#7C3AED</color>
+    <color name="status_ready">#16A34A</color>
+    <color name="status_pending">#D97706</color>
+</resources>

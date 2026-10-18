@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Samgyupsal Ordering System</string>
+    <string name="app_tagline">Sizzling Korean BBQ at Your Fingertips</string>
+    <string name="tab_customer">Customer Dining</string>
+    <string name="tab_staff_admin">Staff &amp; Admin</string>
+    
+    <string name="scan_qr_title">Scan Table QR Code</string>
+    <string name="scan_qr_desc">Scan the QR code on your table to view the menu and start ordering</string>
+    <string name="btn_open_camera">Open Camera Scanner</string>
+    <string name="or_enter_code">Or enter table code manually</string>
+    <string name="hint_table_code">Table Code (e.g. Table 1)</string>
+    <string name="btn_enter_menu">Proceed to Menu</string>
+    <string name="quick_tables">Quick Select Table</string>
+    
+    <string name="staff_admin_title">Staff &amp; Admin Portal</string>
+    <string name="staff_admin_desc">Sign in with your staff or administrator credentials</string>
+    <string name="hint_id">ID (e.g. backsite or admin)</string>
+    <string name="hint_passkey">Passkey</string>
+    <string name="btn_login">Sign In</string>
+    
+    <string name="err_empty_table">Please enter a table code or scan a QR</string>
+    <string name="err_empty_creds">Please enter both ID and Passkey</string>
+    <string name="err_invalid_creds">Invalid ID or Passkey</string>
+</resources>

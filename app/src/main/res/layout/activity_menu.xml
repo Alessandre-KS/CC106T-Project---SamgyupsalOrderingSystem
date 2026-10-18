@@ -1,0 +1,1388 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_light"
+    tools:context=".MenuActivity">
+
+    <!-- Top App Bar with Table & Set Info -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="0dp"
+        app:cardBackgroundColor="@color/secondary">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="12dp">
+
+            <!-- Row 1: Table Title, Meal Plan & Quick Checkout -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvTableNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Table 1 • 2 Guests"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvSetMealBadge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Set Meal A • Typical Pork"
+                        android:textColor="#FDBA74"
+                        android:textSize="12sp"
+                        android:layout_marginTop="2dp" />
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnExitMenu"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:text="Checkout"
+                    android:textColor="@color/white"
+                    app:strokeColor="#52525B"
+                    android:textSize="12sp"
+                    android:paddingHorizontal="14dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:minWidth="0dp"
+                    app:cornerRadius="17dp" />
+            </LinearLayout>
+
+            <!-- Row 2: Customer Action Buttons (Change Set & Call Staff) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnChangeSet"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="34dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:text="Change Meal Plan"
+                    android:textColor="#E4E4E7"
+                    app:strokeColor="#3F3F46"
+                    android:textSize="12sp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:paddingHorizontal="8dp"
+                    app:cornerRadius="17dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCallStaff"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="34dp"
+                    android:layout_weight="1"
+                    android:text="Call Staff"
+                    android:textColor="#E4E4E7"
+                    app:strokeColor="#3F3F46"
+                    android:textSize="12sp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:paddingHorizontal="8dp"
+                    app:cornerRadius="17dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- 1-Hour Dining Timer Status Banner (Clean HUD styling) -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardTimerBanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/surface_card"
+        app:strokeColor="@color/divider_color"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="10dp">
+
+            <TextView
+                android:id="@+id/tvTimerIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⏳"
+                android:textSize="16sp"
+                android:layout_marginEnd="10dp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvTimerTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dining Timer"
+                    android:textColor="@color/text_main"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvTimerSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Starts when first food order arrives"
+                    android:textColor="@color/text_muted"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvTimerCountdown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="60:00"
+                android:textColor="@color/text_main"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnExtendTimer"
+                style="?attr/materialButtonTonalStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginStart="10dp"
+                android:text="+ Extend"
+                android:textColor="@color/primary"
+                android:textSize="12sp"
+                android:paddingHorizontal="12dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                app:cornerRadius="16dp" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Scrollable Menu -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="16dp">
+
+            <!-- ================= SECTION 1: MEATS ================= -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Signature Meats"
+                android:textColor="@color/text_main"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/surface_card"
+                app:strokeColor="@color/divider_color"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Meat 1: Plain Pork -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="14dp"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Plain Pork Belly (Samgyupsal)"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Classic unmarinated fresh pork belly"
+                                android:textColor="@color/text_muted"
+                                android:textSize="12sp"
+                                android:layout_marginTop="1dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnMinusNormalPork"
+                                style="?attr/materialButtonOutlinedStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="−"
+                                android:textSize="15sp"
+                                android:textColor="@color/text_main"
+                                app:strokeColor="@color/divider_color"
+                                app:cornerRadius="16dp" />
+
+                            <TextView
+                                android:id="@+id/tvQtyNormalPork"
+                                android:layout_width="28dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnPlusNormalPork"
+                                style="?attr/materialButtonTonalStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="+"
+                                android:textSize="15sp"
+                                android:textColor="@color/primary"
+                                app:cornerRadius="16dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/divider_color"
+                        android:layout_marginHorizontal="14dp" />
+
+                    <!-- Meat 2: Spicy Pork -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="14dp"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Spicy Pork (Yangnyeom Bulgogi)"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Gochujang marinated sliced pork"
+                                android:textColor="@color/text_muted"
+                                android:textSize="12sp"
+                                android:layout_marginTop="1dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnMinusSpicyPork"
+                                style="?attr/materialButtonOutlinedStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="−"
+                                android:textSize="15sp"
+                                android:textColor="@color/text_main"
+                                app:strokeColor="@color/divider_color"
+                                app:cornerRadius="16dp" />
+
+                            <TextView
+                                android:id="@+id/tvQtySpicyPork"
+                                android:layout_width="28dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnPlusSpicyPork"
+                                style="?attr/materialButtonTonalStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="+"
+                                android:textSize="15sp"
+                                android:textColor="@color/primary"
+                                app:cornerRadius="16dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/divider_color"
+                        android:layout_marginHorizontal="14dp" />
+
+                    <!-- Meat 3: Sweet Soy Pork -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="14dp"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Sweet Soy Marinated Pork"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Sweet garlic soy marinated pork belly"
+                                android:textColor="@color/text_muted"
+                                android:textSize="12sp"
+                                android:layout_marginTop="1dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnMinusSweetPork"
+                                style="?attr/materialButtonOutlinedStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="−"
+                                android:textSize="15sp"
+                                android:textColor="@color/text_main"
+                                app:strokeColor="@color/divider_color"
+                                app:cornerRadius="16dp" />
+
+                            <TextView
+                                android:id="@+id/tvQtySweetPork"
+                                android:layout_width="28dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnPlusSweetPork"
+                                style="?attr/materialButtonTonalStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="+"
+                                android:textSize="15sp"
+                                android:textColor="@color/primary"
+                                app:cornerRadius="16dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/divider_color"
+                        android:layout_marginHorizontal="14dp" />
+
+                    <!-- Meat 4: Beef Brisket (Set C) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="14dp"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Beef Brisket (Chadolbaegi)"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvStatusPlainBeef"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Thinly sliced unmarinated premium beef"
+                                android:textColor="@color/text_muted"
+                                android:textSize="12sp"
+                                android:layout_marginTop="1dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnMinusPlainBeef"
+                                style="?attr/materialButtonOutlinedStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="−"
+                                android:textSize="15sp"
+                                android:textColor="@color/text_main"
+                                app:strokeColor="@color/divider_color"
+                                app:cornerRadius="16dp" />
+
+                            <TextView
+                                android:id="@+id/tvQtyPlainBeef"
+                                android:layout_width="28dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnPlusPlainBeef"
+                                style="?attr/materialButtonTonalStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="+"
+                                android:textSize="15sp"
+                                android:textColor="@color/primary"
+                                app:cornerRadius="16dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/divider_color"
+                        android:layout_marginHorizontal="14dp" />
+
+                    <!-- Meat 5: Bulgogi Beef (Set C) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="14dp"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Sweet Bulgogi Beef"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvStatusBulgogiBeef"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Traditional sweet soy marinated tender beef"
+                                android:textColor="@color/text_muted"
+                                android:textSize="12sp"
+                                android:layout_marginTop="1dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnMinusBulgogiBeef"
+                                style="?attr/materialButtonOutlinedStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="−"
+                                android:textSize="15sp"
+                                android:textColor="@color/text_main"
+                                app:strokeColor="@color/divider_color"
+                                app:cornerRadius="16dp" />
+
+                            <TextView
+                                android:id="@+id/tvQtyBulgogiBeef"
+                                android:layout_width="28dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnPlusBulgogiBeef"
+                                style="?attr/materialButtonTonalStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="+"
+                                android:textSize="15sp"
+                                android:textColor="@color/primary"
+                                app:cornerRadius="16dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ================= SECTION 2: BANCHAN (SIDE DISHES) ================= -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Side Dishes &amp; Banchan"
+                android:textColor="@color/text_main"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/surface_card"
+                app:strokeColor="@color/divider_color"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Banchan 1: Fresh Lettuce -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="14dp"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Fresh Lettuce (Sangchu)"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Crisp wrap lettuce for samgyupsal"
+                                android:textColor="@color/text_muted"
+                                android:textSize="12sp"
+                                android:layout_marginTop="1dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnMinusLettuce"
+                                style="?attr/materialButtonOutlinedStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="−"
+                                android:textSize="15sp"
+                                android:textColor="@color/text_main"
+                                app:strokeColor="@color/divider_color"
+                                app:cornerRadius="16dp" />
+
+                            <TextView
+                                android:id="@+id/tvQtyLettuce"
+                                android:layout_width="28dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnPlusLettuce"
+                                style="?attr/materialButtonTonalStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="+"
+                                android:textSize="15sp"
+                                android:textColor="@color/primary"
+                                app:cornerRadius="16dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/divider_color"
+                        android:layout_marginHorizontal="14dp" />
+
+                    <!-- Banchan 2: Aged Kimchi -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="14dp"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Traditional Aged Kimchi"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Spicy fermented Korean napa cabbage"
+                                android:textColor="@color/text_muted"
+                                android:textSize="12sp"
+                                android:layout_marginTop="1dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnMinusKimchi"
+                                style="?attr/materialButtonOutlinedStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="−"
+                                android:textSize="15sp"
+                                android:textColor="@color/text_main"
+                                app:strokeColor="@color/divider_color"
+                                app:cornerRadius="16dp" />
+
+                            <TextView
+                                android:id="@+id/tvQtyKimchi"
+                                android:layout_width="28dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnPlusKimchi"
+                                style="?attr/materialButtonTonalStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="+"
+                                android:textSize="15sp"
+                                android:textColor="@color/primary"
+                                app:cornerRadius="16dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/divider_color"
+                        android:layout_marginHorizontal="14dp" />
+
+                    <!-- Banchan 3: Sweet Glazed Potatoes -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="14dp"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Sweet Glazed Potatoes (Gamja Jorim)"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Caramelized savory potato side"
+                                android:textColor="@color/text_muted"
+                                android:textSize="12sp"
+                                android:layout_marginTop="1dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnMinusPotatoes"
+                                style="?attr/materialButtonOutlinedStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="−"
+                                android:textSize="15sp"
+                                android:textColor="@color/text_main"
+                                app:strokeColor="@color/divider_color"
+                                app:cornerRadius="16dp" />
+
+                            <TextView
+                                android:id="@+id/tvQtyPotatoes"
+                                android:layout_width="28dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnPlusPotatoes"
+                                style="?attr/materialButtonTonalStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="+"
+                                android:textSize="15sp"
+                                android:textColor="@color/primary"
+                                app:cornerRadius="16dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/divider_color"
+                        android:layout_marginHorizontal="14dp" />
+
+                    <!-- Banchan 4: Japchae -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="14dp"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Stir-Fried Glass Noodles (Japchae)"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Sweet potato glass noodles with vegetables"
+                                android:textColor="@color/text_muted"
+                                android:textSize="12sp"
+                                android:layout_marginTop="1dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnMinusJapchae"
+                                style="?attr/materialButtonOutlinedStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="−"
+                                android:textSize="15sp"
+                                android:textColor="@color/text_main"
+                                app:strokeColor="@color/divider_color"
+                                app:cornerRadius="16dp" />
+
+                            <TextView
+                                android:id="@+id/tvQtyJapchae"
+                                android:layout_width="28dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnPlusJapchae"
+                                style="?attr/materialButtonTonalStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="+"
+                                android:textSize="15sp"
+                                android:textColor="@color/primary"
+                                app:cornerRadius="16dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/divider_color"
+                        android:layout_marginHorizontal="14dp" />
+
+                    <!-- Banchan 5: Pamuchim -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="14dp"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Seasoned Green Onion Salad (Pamuchim)"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Zesty scallion salad with chili powder"
+                                android:textColor="@color/text_muted"
+                                android:textSize="12sp"
+                                android:layout_marginTop="1dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnMinusPamuchim"
+                                style="?attr/materialButtonOutlinedStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="−"
+                                android:textSize="15sp"
+                                android:textColor="@color/text_main"
+                                app:strokeColor="@color/divider_color"
+                                app:cornerRadius="16dp" />
+
+                            <TextView
+                                android:id="@+id/tvQtyPamuchim"
+                                android:layout_width="28dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnPlusPamuchim"
+                                style="?attr/materialButtonTonalStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="+"
+                                android:textSize="15sp"
+                                android:textColor="@color/primary"
+                                app:cornerRadius="16dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ================= SECTION 3: RICE, DIPS & EXTRAS ================= -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rice &amp; Dips"
+                android:textColor="@color/text_main"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/surface_card"
+                app:strokeColor="@color/divider_color"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Extra 1: Steamed White Rice -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="14dp"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Steamed White Rice (Bap)"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Warm premium steamed white rice"
+                                android:textColor="@color/text_muted"
+                                android:textSize="12sp"
+                                android:layout_marginTop="1dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnMinusRice"
+                                style="?attr/materialButtonOutlinedStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="−"
+                                android:textSize="15sp"
+                                android:textColor="@color/text_main"
+                                app:strokeColor="@color/divider_color"
+                                app:cornerRadius="16dp" />
+
+                            <TextView
+                                android:id="@+id/tvQtyRice"
+                                android:layout_width="28dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnPlusRice"
+                                style="?attr/materialButtonTonalStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="+"
+                                android:textSize="15sp"
+                                android:textColor="@color/primary"
+                                app:cornerRadius="16dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/divider_color"
+                        android:layout_marginHorizontal="14dp" />
+
+                    <!-- Extra 2: Ssamjang & Sesame Oil -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="14dp"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Ssamjang &amp; Sesame Oil Dip"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Soybean paste sauce and toasted sesame oil"
+                                android:textColor="@color/text_muted"
+                                android:textSize="12sp"
+                                android:layout_marginTop="1dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnMinusSsamjang"
+                                style="?attr/materialButtonOutlinedStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="−"
+                                android:textSize="15sp"
+                                android:textColor="@color/text_main"
+                                app:strokeColor="@color/divider_color"
+                                app:cornerRadius="16dp" />
+
+                            <TextView
+                                android:id="@+id/tvQtySsamjang"
+                                android:layout_width="28dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnPlusSsamjang"
+                                style="?attr/materialButtonTonalStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="+"
+                                android:textSize="15sp"
+                                android:textColor="@color/primary"
+                                app:cornerRadius="16dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/divider_color"
+                        android:layout_marginHorizontal="14dp" />
+
+                    <!-- Extra 3: Melted Cheese Dip -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="14dp"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Melted Cheese Dip"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvCheeseStatus"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Included in Set B and C"
+                                android:textColor="@color/text_muted"
+                                android:textSize="12sp"
+                                android:layout_marginTop="1dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnMinusCheese"
+                                style="?attr/materialButtonOutlinedStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="−"
+                                android:textSize="15sp"
+                                android:textColor="@color/text_main"
+                                app:strokeColor="@color/divider_color"
+                                app:cornerRadius="16dp" />
+
+                            <TextView
+                                android:id="@+id/tvQtyCheese"
+                                android:layout_width="28dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textColor="@color/text_main"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnPlusCheese"
+                                style="?attr/materialButtonTonalStyle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="0dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="+"
+                                android:textSize="15sp"
+                                android:textColor="@color/primary"
+                                app:cornerRadius="16dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom Cart / Order Bar -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="6dp"
+        app:strokeWidth="0dp"
+        app:cardBackgroundColor="@color/surface_card">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="14dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvOrderCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0 items selected"
+                    android:textColor="@color/text_main"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvOrderPreview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Select cuts or sides to order"
+                    android:textColor="@color/text_muted"
+                    android:textSize="12sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_marginTop="1dp" />
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSubmitOrder"
+                android:layout_width="wrap_content"
+                android:layout_height="46dp"
+                android:text="Send Order"
+                android:textAllCaps="false"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:backgroundTint="@color/primary"
+                android:textColor="@color/on_primary"
+                app:cornerRadius="10dp" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>
