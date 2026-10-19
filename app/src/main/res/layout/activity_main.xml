@@ -422,5 +422,17 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Version Footer -->
+        <TextView
+            android:id="@+id/tvAppVersion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Samgyupsal Ordering System • v1.0.2"
+            android:textColor="@color/text_muted"
+            android:textSize="12sp"
+            android:layout_marginTop="28dp"
+            android:layout_marginBottom="20dp" />
+
     </LinearLayout>
 </ScrollView>

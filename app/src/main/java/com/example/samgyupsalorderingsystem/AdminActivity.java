@@ -61,6 +61,16 @@ public class AdminActivity extends AppCompatActivity {
             Toast.makeText(this, "Admin signed out", Toast.LENGTH_SHORT).show();
             finish();
         });
+
+        TextView tvAdminAppVersion = findViewById(R.id.tvAdminAppVersion);
+        if (tvAdminAppVersion != null) {
+            try {
+                String v = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+                tvAdminAppVersion.setText("Samgyupsal Ordering System • v" + v);
+            } catch (Exception ignored) {
+                tvAdminAppVersion.setText("Samgyupsal Ordering System • v1.0.2");
+            }
+        }
     }
 
     private void updateMetrics() {

@@ -3,6 +3,7 @@ package com.example.samgyupsalorderingsystem;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -113,6 +114,16 @@ public class MainActivity extends AppCompatActivity {
 
         tilPasskey = findViewById(R.id.tilPasskey);
         etPasskey = findViewById(R.id.etPasskey);
+
+        TextView tvAppVersion = findViewById(R.id.tvAppVersion);
+        if (tvAppVersion != null) {
+            try {
+                String v = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+                tvAppVersion.setText("Samgyupsal Ordering System • v" + v);
+            } catch (Exception ignored) {
+                tvAppVersion.setText("Samgyupsal Ordering System • v1.0.2");
+            }
+        }
     }
 
     private void setupRoleToggle() {
