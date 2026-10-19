@@ -11,7 +11,9 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
@@ -62,6 +64,12 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+        if (controller != null) {
+            controller.setAppearanceLightStatusBars(true);
+            controller.setAppearanceLightNavigationBars(true);
+        }
 
         initViews();
         setupRoleToggle();
@@ -121,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                 String v = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
                 tvAppVersion.setText("Samgyupsal Ordering System • v" + v);
             } catch (Exception ignored) {
-                tvAppVersion.setText("Samgyupsal Ordering System • v1.0.2");
+                tvAppVersion.setText("Samgyupsal Ordering System • v1.0.3");
             }
         }
     }

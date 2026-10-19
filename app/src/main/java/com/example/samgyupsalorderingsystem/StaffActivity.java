@@ -6,8 +6,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
@@ -39,7 +45,39 @@ public class StaffActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_staff);
+
+        View staffRoot = findViewById(R.id.staffRoot);
+        View headerContent = findViewById(R.id.staffHeaderContent);
+        View scrollView = findViewById(R.id.staffScrollView);
+
+        int baseHeaderTopPadding = headerContent.getPaddingTop();
+        int baseBottomPadding = scrollView.getPaddingBottom();
+
+        ViewCompat.setOnApplyWindowInsetsListener(staffRoot, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, 0, systemBars.right, 0);
+            headerContent.setPadding(
+                    headerContent.getPaddingLeft(),
+                    baseHeaderTopPadding + systemBars.top,
+                    headerContent.getPaddingRight(),
+                    headerContent.getPaddingBottom()
+            );
+            scrollView.setPadding(
+                    scrollView.getPaddingLeft(),
+                    scrollView.getPaddingTop(),
+                    scrollView.getPaddingRight(),
+                    baseBottomPadding + systemBars.bottom
+            );
+            return insets;
+        });
+
+        WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+        if (controller != null) {
+            controller.setAppearanceLightStatusBars(false);
+            controller.setAppearanceLightNavigationBars(true);
+        }
 
         initViews();
         setupStationToggle();

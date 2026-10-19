@@ -4,12 +4,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.google.android.material.button.MaterialButton;
 
@@ -52,7 +59,39 @@ public class MenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_menu);
+
+        View menuRoot = findViewById(R.id.menuRoot);
+        View menuHeaderContent = findViewById(R.id.menuHeaderContent);
+        View menuBottomContent = findViewById(R.id.menuBottomContent);
+
+        int baseHeaderTopPadding = menuHeaderContent.getPaddingTop();
+        int baseBottomPadding = menuBottomContent.getPaddingBottom();
+
+        ViewCompat.setOnApplyWindowInsetsListener(menuRoot, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, 0, systemBars.right, 0);
+            menuHeaderContent.setPadding(
+                    menuHeaderContent.getPaddingLeft(),
+                    baseHeaderTopPadding + systemBars.top,
+                    menuHeaderContent.getPaddingRight(),
+                    menuHeaderContent.getPaddingBottom()
+            );
+            menuBottomContent.setPadding(
+                    menuBottomContent.getPaddingLeft(),
+                    menuBottomContent.getPaddingTop(),
+                    menuBottomContent.getPaddingRight(),
+                    baseBottomPadding + systemBars.bottom
+            );
+            return insets;
+        });
+
+        WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+        if (controller != null) {
+            controller.setAppearanceLightStatusBars(false);
+            controller.setAppearanceLightNavigationBars(true);
+        }
 
         tableCode = getIntent().getStringExtra(EXTRA_TABLE_CODE);
         if (tableCode == null || tableCode.trim().isEmpty()) {

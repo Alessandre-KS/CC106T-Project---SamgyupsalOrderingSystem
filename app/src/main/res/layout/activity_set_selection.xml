@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/setSelectionRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -18,6 +19,7 @@
         app:cardBackgroundColor="@color/secondary">
 
         <LinearLayout
+            android:id="@+id/setSelectionHeaderContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -436,6 +438,7 @@
         app:cardBackgroundColor="@color/surface_card">
 
         <LinearLayout
+            android:id="@+id/setSelectionBottomContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"

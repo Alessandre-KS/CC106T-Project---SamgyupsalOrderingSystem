@@ -1,12 +1,19 @@
 package com.example.samgyupsalorderingsystem;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.google.android.material.button.MaterialButton;
 
@@ -23,7 +30,39 @@ public class AdminActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_admin);
+
+        View adminRoot = findViewById(R.id.adminRoot);
+        View headerContent = findViewById(R.id.adminHeaderContent);
+        View scrollView = findViewById(R.id.adminScrollView);
+
+        int baseHeaderTopPadding = headerContent.getPaddingTop();
+        int baseBottomPadding = scrollView.getPaddingBottom();
+
+        ViewCompat.setOnApplyWindowInsetsListener(adminRoot, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, 0, systemBars.right, 0);
+            headerContent.setPadding(
+                    headerContent.getPaddingLeft(),
+                    baseHeaderTopPadding + systemBars.top,
+                    headerContent.getPaddingRight(),
+                    headerContent.getPaddingBottom()
+            );
+            scrollView.setPadding(
+                    scrollView.getPaddingLeft(),
+                    scrollView.getPaddingTop(),
+                    scrollView.getPaddingRight(),
+                    baseBottomPadding + systemBars.bottom
+            );
+            return insets;
+        });
+
+        WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+        if (controller != null) {
+            controller.setAppearanceLightStatusBars(false);
+            controller.setAppearanceLightNavigationBars(true);
+        }
 
         initViews();
         updateMetrics();
@@ -68,7 +107,7 @@ public class AdminActivity extends AppCompatActivity {
                 String v = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
                 tvAdminAppVersion.setText("Samgyupsal Ordering System • v" + v);
             } catch (Exception ignored) {
-                tvAdminAppVersion.setText("Samgyupsal Ordering System • v1.0.2");
+                tvAdminAppVersion.setText("Samgyupsal Ordering System • v1.0.3");
             }
         }
     }
