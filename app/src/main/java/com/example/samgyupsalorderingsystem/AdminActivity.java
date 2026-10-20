@@ -1,8 +1,10 @@
 package com.example.samgyupsalorderingsystem;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,9 +18,13 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class AdminActivity extends AppCompatActivity {
@@ -26,6 +32,9 @@ public class AdminActivity extends AppCompatActivity {
     private TextView tvAdminSales;
     private TextView tvAdminActiveTables;
     private TextView tvAdminCompletedOrders;
+
+    private Handler pollHandler;
+    private Runnable pollRunnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,11 +80,48 @@ public class AdminActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        syncAllData();
+        startPolling();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopPolling();
+    }
+
+    private void syncAllData() {
         BackendSyncManager.getInstance().syncPricing(() -> {
             BackendSyncManager.getInstance().syncAuth(() -> {
-                BackendSyncManager.getInstance().syncOrders(this::updateMetrics);
+                BackendSyncManager.getInstance().syncOrders(() -> {
+                    BackendSyncManager.getInstance().syncAllTimers(this::updateMetrics);
+                });
             });
         });
+    }
+
+    private void startPolling() {
+        if (pollHandler == null) pollHandler = new Handler(Looper.getMainLooper());
+        if (pollRunnable == null) {
+            pollRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    BackendSyncManager.getInstance().syncOrders(() -> {
+                        BackendSyncManager.getInstance().syncAllTimers(AdminActivity.this::updateMetrics);
+                    });
+                    if (pollHandler != null) {
+                        pollHandler.postDelayed(this, 3000);
+                    }
+                }
+            };
+        }
+        pollHandler.postDelayed(pollRunnable, 3000);
+    }
+
+    private void stopPolling() {
+        if (pollHandler != null && pollRunnable != null) {
+            pollHandler.removeCallbacks(pollRunnable);
+        }
     }
 
     private void initViews() {
@@ -107,7 +153,7 @@ public class AdminActivity extends AppCompatActivity {
                 String v = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
                 tvAdminAppVersion.setText("Samgyupsal Ordering System • v" + v);
             } catch (Exception ignored) {
-                tvAdminAppVersion.setText("Samgyupsal Ordering System • v1.0.4");
+                tvAdminAppVersion.setText("Samgyupsal Ordering System • v1.0.5");
             }
         }
     }
@@ -140,7 +186,7 @@ public class AdminActivity extends AppCompatActivity {
             tvAdminSales.setText("₱" + String.format("%,d", totalSales));
         }
         if (tvAdminActiveTables != null) {
-            tvAdminActiveTables.setText(activeTables.size() + " / 12");
+            tvAdminActiveTables.setText(activeTables.size() + " Active");
         }
         if (tvAdminCompletedOrders != null) {
             tvAdminCompletedOrders.setText(String.valueOf(completedOrders));
@@ -170,12 +216,15 @@ public class AdminActivity extends AppCompatActivity {
             boolean started = TableTimerManager.getInstance().isTimerStarted(table);
             String time = TableTimerManager.getInstance().getFormattedRemainingTime(table);
             int extFee = TableTimerManager.getInstance().getExtensionFee(table);
-            sb.append("• ").append(table).append(": ")
+            BacksiteOrder initOrder = OrderRepository.getInstance().getActiveInitialOrder(table);
+            String plan = initOrder != null ? " (" + initOrder.getHeadCount() + " Pax • " + initOrder.getSetMeal() + ")" : "";
+
+            sb.append("• ").append(table).append(plan).append(":\n  ")
               .append(started ? "⏱️ " + time + " remaining" : "⏳ Waiting for food delivery");
             if (extFee > 0) {
-                sb.append(" (+₱").append(extFee).append(" extension fee)");
+                sb.append(" (+₱").append(extFee).append(" extension)");
             }
-            sb.append("\n");
+            sb.append("\n\n");
         }
 
         new AlertDialog.Builder(this)
@@ -200,61 +249,28 @@ public class AdminActivity extends AppCompatActivity {
     }
 
     private void showMenuPricingDialog() {
-        android.widget.LinearLayout layout = new android.widget.LinearLayout(this);
-        layout.setOrientation(android.widget.LinearLayout.VERTICAL);
-        int pad = (int) (18 * getResources().getDisplayMetrics().density);
-        layout.setPadding(pad, pad, pad, pad);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_manage_pricing, null);
+        TextInputEditText etA = view.findViewById(R.id.etPriceA);
+        TextInputEditText etB = view.findViewById(R.id.etPriceB);
+        TextInputEditText etC = view.findViewById(R.id.etPriceC);
 
-        TextView tvHeader = new TextView(this);
-        tvHeader.setText("Update dining set prices per person (pax).\nChanges apply dynamically across all customer tables.");
-        tvHeader.setTextSize(13);
-        tvHeader.setTextColor(getColor(R.color.text_muted));
-        tvHeader.setPadding(0, 0, 0, (int) (12 * getResources().getDisplayMetrics().density));
-        layout.addView(tvHeader);
-
-        TextView tvA = new TextView(this);
-        tvA.setText("SET MEAL A (Typical Pork) - ₱ / pax:");
-        tvA.setTypeface(null, android.graphics.Typeface.BOLD);
-        layout.addView(tvA);
-
-        EditText etA = new EditText(this);
-        etA.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
         etA.setText(String.valueOf(SetMeal.getPriceSetA()));
-        layout.addView(etA);
-
-        TextView tvB = new TextView(this);
-        tvB.setText("SET MEAL B (Pork + Cheese Dip) - ₱ / pax:");
-        tvB.setTypeface(null, android.graphics.Typeface.BOLD);
-        tvB.setPadding(0, (int) (8 * getResources().getDisplayMetrics().density), 0, 0);
-        layout.addView(tvB);
-
-        EditText etB = new EditText(this);
-        etB.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
         etB.setText(String.valueOf(SetMeal.getPriceSetB()));
-        layout.addView(etB);
-
-        TextView tvC = new TextView(this);
-        tvC.setText("SET MEAL C (Pork & Beef Unlimited) - ₱ / pax:");
-        tvC.setTypeface(null, android.graphics.Typeface.BOLD);
-        tvC.setPadding(0, (int) (8 * getResources().getDisplayMetrics().density), 0, 0);
-        layout.addView(tvC);
-
-        EditText etC = new EditText(this);
-        etC.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
         etC.setText(String.valueOf(SetMeal.getPriceSetC()));
-        layout.addView(etC);
 
         new AlertDialog.Builder(this)
-                .setTitle("🥩 Manage Menu Pricing")
-                .setView(layout)
+                .setTitle("Manage Menu Pricing")
+                .setView(view)
                 .setPositiveButton("Save & Update Prices", (d, w) -> {
                     try {
-                        int priceA = Integer.parseInt(etA.getText().toString().trim());
-                        int priceB = Integer.parseInt(etB.getText().toString().trim());
-                        int priceC = Integer.parseInt(etC.getText().toString().trim());
+                        int priceA = Integer.parseInt(etA.getText() != null ? etA.getText().toString().trim() : "0");
+                        int priceB = Integer.parseInt(etB.getText() != null ? etB.getText().toString().trim() : "0");
+                        int priceC = Integer.parseInt(etC.getText() != null ? etC.getText().toString().trim() : "0");
                         if (priceA > 0 && priceB > 0 && priceC > 0) {
                             BackendSyncManager.getInstance().updatePricing(priceA, priceB, priceC, this::updateMetrics);
                             Toast.makeText(this, "Prices updated! Set A: ₱" + priceA + ", Set B: ₱" + priceB + ", Set C: ₱" + priceC, Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(this, "Prices must be greater than zero", Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
                         Toast.makeText(this, "Please enter valid numeric prices", Toast.LENGTH_SHORT).show();
@@ -265,46 +281,24 @@ public class AdminActivity extends AppCompatActivity {
     }
 
     private void showStaffAccountsDialog() {
-        android.widget.LinearLayout layout = new android.widget.LinearLayout(this);
-        layout.setOrientation(android.widget.LinearLayout.VERTICAL);
-        int pad = (int) (18 * getResources().getDisplayMetrics().density);
-        layout.setPadding(pad, pad, pad, pad);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_manage_staff, null);
+        TextInputEditText etStaff = view.findViewById(R.id.etStaffPass);
+        TextInputEditText etAdmin = view.findViewById(R.id.etAdminPass);
 
-        TextView tvInfo = new TextView(this);
-        tvInfo.setText("Current accounts:\n• Staff ID: backsite\n• Admin ID: admin\n\nUpdate login passkeys below:");
-        tvInfo.setTextSize(13);
-        tvInfo.setTextColor(getColor(R.color.text_muted));
-        layout.addView(tvInfo);
-
-        TextView tvStaff = new TextView(this);
-        tvStaff.setText("Floor / Kitchen Staff Passkey:");
-        tvStaff.setTypeface(null, android.graphics.Typeface.BOLD);
-        tvStaff.setPadding(0, (int) (12 * getResources().getDisplayMetrics().density), 0, 0);
-        layout.addView(tvStaff);
-
-        EditText etStaff = new EditText(this);
         etStaff.setText(AuthManager.getStaffPasskey());
-        layout.addView(etStaff);
-
-        TextView tvAdmin = new TextView(this);
-        tvAdmin.setText("Administrator Passkey:");
-        tvAdmin.setTypeface(null, android.graphics.Typeface.BOLD);
-        tvAdmin.setPadding(0, (int) (8 * getResources().getDisplayMetrics().density), 0, 0);
-        layout.addView(tvAdmin);
-
-        EditText etAdmin = new EditText(this);
         etAdmin.setText(AuthManager.getAdminPasskey());
-        layout.addView(etAdmin);
 
         new AlertDialog.Builder(this)
-                .setTitle("👥 Staff Passkeys & Accounts")
-                .setView(layout)
+                .setTitle("Staff Passkeys & Accounts")
+                .setView(view)
                 .setPositiveButton("Save Passkeys", (d, w) -> {
-                    String sPass = etStaff.getText().toString().trim();
-                    String aPass = etAdmin.getText().toString().trim();
+                    String sPass = etStaff.getText() != null ? etStaff.getText().toString().trim() : "";
+                    String aPass = etAdmin.getText() != null ? etAdmin.getText().toString().trim() : "";
                     if (!sPass.isEmpty() && !aPass.isEmpty()) {
                         BackendSyncManager.getInstance().updateAuth(sPass, aPass, null);
                         Toast.makeText(this, "Passkeys saved successfully!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Passkeys cannot be empty", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("Cancel", null)
@@ -315,8 +309,8 @@ public class AdminActivity extends AppCompatActivity {
         List<BacksiteOrder> orders = OrderRepository.getInstance().getAllOrders();
         if (orders.isEmpty()) {
             new AlertDialog.Builder(this)
-                    .setTitle("Daily Sales Report")
-                    .setMessage("No sales recorded yet today.\nTotal Revenue: ₱0")
+                    .setTitle("Daily Sales & Consumption Report")
+                    .setMessage("No sales recorded yet today.\nTotal Revenue: ₱0\nNo items ordered.")
                     .setPositiveButton("Close", null)
                     .show();
             return;
@@ -326,7 +320,28 @@ public class AdminActivity extends AppCompatActivity {
         int grandTotal = 0;
         int totalPax = 0;
         Set<String> billedTables = new HashSet<>();
+        Map<String, Integer> itemConsumption = new LinkedHashMap<>();
 
+        // 1. Aggregate Food Item Consumptions across all orders (initial + add-ons)
+        for (BacksiteOrder order : orders) {
+            if (order.getItems() != null) {
+                for (String itemStr : order.getItems()) {
+                    if (itemStr == null || itemStr.trim().isEmpty()) continue;
+                    int qty = 1;
+                    String name = itemStr.trim();
+                    if (name.contains("x ")) {
+                        String[] parts = name.split("x ", 2);
+                        try {
+                            qty = Integer.parseInt(parts[0].trim());
+                            name = parts[1].trim();
+                        } catch (NumberFormatException ignored) {}
+                    }
+                    itemConsumption.put(name, itemConsumption.getOrDefault(name, 0) + qty);
+                }
+            }
+        }
+
+        // 2. Aggregate Financial Billing per Table
         for (BacksiteOrder order : orders) {
             if (!order.isAddon() && !billedTables.contains(order.getTableCode())) {
                 billedTables.add(order.getTableCode());
@@ -339,7 +354,7 @@ public class AdminActivity extends AppCompatActivity {
 
                 sb.append("• ").append(order.getTableCode())
                   .append(" (").append(order.getHeadCount()).append(" Pax • ").append(order.getSetMeal()).append(")\n")
-                  .append("  Base Bill: ₱").append(price).append(" × ").append(order.getHeadCount()).append(" = ₱").append(String.format("%,d", order.getHeadCount() * price));
+                  .append("  Base: ₱").append(price).append(" × ").append(order.getHeadCount()).append(" = ₱").append(String.format("%,d", order.getHeadCount() * price));
                 if (extFee > 0) {
                     sb.append(" (+₱").append(extFee).append(" ext)");
                 }
@@ -347,18 +362,28 @@ public class AdminActivity extends AppCompatActivity {
             }
         }
 
-        sb.append("-----------------------------\n");
-        sb.append("TOTAL TABLES BILLED: ").append(billedTables.size()).append("\n");
-        sb.append("TOTAL CUSTOMERS (PAX): ").append(totalPax).append("\n");
-        sb.append("TOTAL REVENUE: ₱").append(String.format("%,d", grandTotal));
+        sb.append("=============================\n");
+        sb.append("📊 FINANCIAL OVERVIEW:\n");
+        sb.append("• Total Tables Billed: ").append(billedTables.size()).append("\n");
+        sb.append("• Total Guests (Pax): ").append(totalPax).append("\n");
+        sb.append("• Total Gross Revenue: ₱").append(String.format("%,d", grandTotal)).append("\n");
+
+        if (!itemConsumption.isEmpty()) {
+            sb.append("\n=============================\n");
+            sb.append("🥩 DAILY FOOD CONSUMPTION:\n");
+            List<Map.Entry<String, Integer>> sorted = new ArrayList<>(itemConsumption.entrySet());
+            sorted.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+            for (Map.Entry<String, Integer> entry : sorted) {
+                sb.append("• ").append(entry.getKey()).append(": ").append(entry.getValue()).append(" ordered\n");
+            }
+        }
 
         new AlertDialog.Builder(this)
-                .setTitle("Daily Sales Breakdown")
+                .setTitle("Daily Sales & Consumption Report")
                 .setMessage(sb.toString().trim())
                 .setPositiveButton("Close", null)
                 .show();
     }
-
 
     private void showResetDatabaseDialog() {
         new AlertDialog.Builder(this)
