@@ -23,7 +23,7 @@ An Android app for ordering and managing Korean BBQ dining, built for our **CC10
 - Change meal set prices (Set A, B, C).
 - Update staff and admin passkeys.
 - Reset the database when testing.
-- Check daily customer consumptions
+- Check daily customer consumptions of food
 
 ---
 
