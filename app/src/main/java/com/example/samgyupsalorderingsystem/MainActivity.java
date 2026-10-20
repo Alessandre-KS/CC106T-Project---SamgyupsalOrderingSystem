@@ -48,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
                 if (result.getContents() != null) {
                     String scannedCode = result.getContents();
                     Toast.makeText(this, "QR Code Scanned: " + scannedCode, Toast.LENGTH_SHORT).show();
+                    if (etTableCode != null) {
+                        etTableCode.setText(scannedCode);
+                    }
                     validateAndProceed(scannedCode);
                 }
             }
@@ -77,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
         setupStaffAdminFlow();
     }
 
+    private java.util.Set<String> currentOccupiedSet;
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -87,24 +92,47 @@ public class MainActivity extends AppCompatActivity {
 
     private void refreshOccupiedTables() {
         BackendSyncManager.getInstance().getOccupiedTables(occupiedSet -> {
-            updateChip(chipTable1, "Table 1", occupiedSet);
-            updateChip(chipTable2, "Table 2", occupiedSet);
-            updateChip(chipTable3, "Table 3", occupiedSet);
+            this.currentOccupiedSet = occupiedSet;
+            updateAllChips();
         });
     }
 
-    private void updateChip(MaterialButton chip, String tableCode, java.util.Set<String> occupiedSet) {
+    private void updateAllChips() {
+        String currentCode = etTableCode != null && etTableCode.getText() != null
+                ? etTableCode.getText().toString().trim() : "";
+        String formatted = AuthManager.formatTableCode(currentCode);
+
+        updateChip(chipTable1, "Table 1", formatted, currentOccupiedSet);
+        updateChip(chipTable2, "Table 2", formatted, currentOccupiedSet);
+        updateChip(chipTable3, "Table 3", formatted, currentOccupiedSet);
+    }
+
+    private void updateChip(MaterialButton chip, String tableCode, String selectedFormatted, java.util.Set<String> occupiedSet) {
         if (chip == null) return;
-        boolean occupied = occupiedSet != null && occupiedSet.contains(tableCode.toUpperCase(java.util.Locale.US));
-        if (occupied) {
-            chip.setText(tableCode + " (Occupied)");
-            chip.setTextColor(getColor(R.color.primary));
-            chip.setStrokeColorResource(R.color.primary);
+        boolean isOccupied = occupiedSet != null && occupiedSet.contains(tableCode.toUpperCase(java.util.Locale.US));
+        boolean isSelected = tableCode.equalsIgnoreCase(selectedFormatted);
+
+        String text = isOccupied ? tableCode + " (Occupied)" : tableCode;
+        chip.setText(text);
+
+        if (isSelected) {
+            chip.setBackgroundTintList(android.content.res.ColorStateList.valueOf(getColor(R.color.primary)));
+            chip.setTextColor(getColor(R.color.on_primary));
+            chip.setStrokeColor(android.content.res.ColorStateList.valueOf(getColor(R.color.primary)));
         } else {
-            chip.setText(tableCode);
-            chip.setTextColor(getColor(R.color.text_main));
-            chip.setStrokeColorResource(R.color.divider_color);
+            chip.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.TRANSPARENT));
+            chip.setTextColor(getColor(isOccupied ? R.color.primary : R.color.text_main));
+            chip.setStrokeColor(android.content.res.ColorStateList.valueOf(getColor(isOccupied ? R.color.primary : R.color.divider_color)));
         }
+    }
+
+    private void selectQuickTable(String tableCode) {
+        etTableCode.setText(tableCode);
+        if (etTableCode.getText() != null) {
+            etTableCode.setSelection(etTableCode.getText().length());
+        }
+        tilTableCode.setError(null);
+        updateAllChips();
     }
 
     private void initViews() {
@@ -113,6 +141,20 @@ public class MainActivity extends AppCompatActivity {
 
         tilTableCode = findViewById(R.id.tilTableCode);
         etTableCode = findViewById(R.id.etTableCode);
+        if (etTableCode != null) {
+            etTableCode.addTextChangedListener(new android.text.TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+                @Override
+                public void afterTextChanged(android.text.Editable s) {
+                    updateAllChips();
+                }
+            });
+        }
 
         tilHeadCount = findViewById(R.id.tilHeadCount);
         etHeadCount = findViewById(R.id.etHeadCount);
@@ -129,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
                 String v = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
                 tvAppVersion.setText("Samgyupsal Ordering System • v" + v);
             } catch (Exception ignored) {
-                tvAppVersion.setText("Samgyupsal Ordering System • v1.0.3");
+                tvAppVersion.setText("Samgyupsal Ordering System • v1.0.4");
             }
         }
     }
@@ -163,18 +205,9 @@ public class MainActivity extends AppCompatActivity {
         chipTable2 = findViewById(R.id.chipTable2);
         chipTable3 = findViewById(R.id.chipTable3);
 
-        chipTable1.setOnClickListener(v -> {
-            etTableCode.setText("Table 1");
-            validateAndProceed("Table 1");
-        });
-        chipTable2.setOnClickListener(v -> {
-            etTableCode.setText("Table 2");
-            validateAndProceed("Table 2");
-        });
-        chipTable3.setOnClickListener(v -> {
-            etTableCode.setText("Table 3");
-            validateAndProceed("Table 3");
-        });
+        chipTable1.setOnClickListener(v -> selectQuickTable("Table 1"));
+        chipTable2.setOnClickListener(v -> selectQuickTable("Table 2"));
+        chipTable3.setOnClickListener(v -> selectQuickTable("Table 3"));
 
         // Manual table code submit
         btnProceedMenu = findViewById(R.id.btnProceedMenu);

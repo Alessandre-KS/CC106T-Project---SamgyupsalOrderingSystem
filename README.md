@@ -1,6 +1,6 @@
 # Samgyupsal Ordering System
 
-A Android app for ordering and managing Korean BBQ dining, built for our **CC106 Application Development** school project for _Sir Catindoy_.
+An Android app for ordering and managing Korean BBQ dining, built for our **CC106 Application Development** school project for _Sir Catindoy_.
 
 ---
 
@@ -31,7 +31,7 @@ A Android app for ordering and managing Korean BBQ dining, built for our **CC106
 
 ### Option A: Install on Phone (Easiest)
 1. Go to the [Releases](https://github.com/Alessandre-KS/CC106T-Project---SamgyupsalOrderingSystem/releases) tab.
-2. Download **`SamgyupsalOrderingSystem-v1.0.3.apk`**.
+2. Download **`SamgyupsalOrderingSystem-v1.0.4.apk`**.
 3. Install and open the app on your Android phone.
 
 ### Option B: Open in Android Studio
