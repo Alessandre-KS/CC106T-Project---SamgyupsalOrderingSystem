@@ -4,18 +4,14 @@ plugins {
 
 android {
     namespace = "com.example.samgyupsalorderingsystem"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.samgyupsalorderingsystem"
-        minSdk = 24
-        targetSdk = 36
-        versionCode = 6
-        versionName = "1.0.5"
+        minSdk = 23
+        targetSdk = 34
+        versionCode = 7
+        versionName = "1.0.6"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

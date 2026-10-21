@@ -153,7 +153,7 @@ public class AdminActivity extends AppCompatActivity {
                 String v = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
                 tvAdminAppVersion.setText("Samgyupsal Ordering System • v" + v);
             } catch (Exception ignored) {
-                tvAdminAppVersion.setText("Samgyupsal Ordering System • v1.0.5");
+                tvAdminAppVersion.setText("Samgyupsal Ordering System • v1.0.6");
             }
         }
     }
