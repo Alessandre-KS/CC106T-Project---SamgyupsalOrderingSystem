@@ -17,9 +17,19 @@ public class TableTimerManager {
     private final Map<String, Long> tableExpiryTimes = new ConcurrentHashMap<>();
     private final Map<String, Long> pendingExtensionMillis = new ConcurrentHashMap<>();
     private final Map<String, Integer> tableExtensionFees = new ConcurrentHashMap<>();
-    private final java.util.Set<String> checkedOutTables = ConcurrentHashMap.newKeySet();
+    private final java.util.Set<String> checkedOutTables = java.util.Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
 
     private TableTimerManager() {}
+
+    private long getPendingMillis(String key) {
+        Long extra = pendingExtensionMillis.get(key);
+        return extra != null ? extra : 0L;
+    }
+
+    private int getTableFee(String key) {
+        Integer fee = tableExtensionFees.get(key);
+        return fee != null ? fee : 0;
+    }
 
     public static synchronized TableTimerManager getInstance() {
         if (instance == null) {
@@ -47,7 +57,7 @@ public class TableTimerManager {
         }
         if (!tableExpiryTimes.containsKey(key)) {
             checkedOutTables.remove(key);
-            long pendingExtra = pendingExtensionMillis.getOrDefault(key, 0L);
+            long pendingExtra = getPendingMillis(key);
             tableExpiryTimes.put(key, System.currentTimeMillis() + ONE_HOUR_MILLIS + pendingExtra);
             pendingExtensionMillis.remove(key);
             return true;
@@ -86,11 +96,12 @@ public class TableTimerManager {
             return;
         }
         if (!tableExpiryTimes.containsKey(key)) {
-            long currentPending = pendingExtensionMillis.getOrDefault(key, 0L);
+            long currentPending = getPendingMillis(key);
             pendingExtensionMillis.put(key, currentPending + additionalMillis);
         } else {
             long now = System.currentTimeMillis();
-            long currentExpiry = tableExpiryTimes.get(key);
+            Long exp = tableExpiryTimes.get(key);
+            long currentExpiry = exp != null ? exp : 0L;
             long base = Math.max(now, currentExpiry);
             tableExpiryTimes.put(key, base + additionalMillis);
         }
@@ -104,7 +115,7 @@ public class TableTimerManager {
         if (fee > 0) {
             String key = normalizeKey(tableCode);
             if (!key.isEmpty()) {
-                int currentFee = tableExtensionFees.getOrDefault(key, 0);
+                int currentFee = getTableFee(key);
                 tableExtensionFees.put(key, currentFee + fee);
             }
         }
@@ -113,13 +124,13 @@ public class TableTimerManager {
     public int getExtensionFee(String tableCode) {
         String key = normalizeKey(tableCode);
         if (key.isEmpty()) return 0;
-        return tableExtensionFees.getOrDefault(key, 0);
+        return getTableFee(key);
     }
 
     public long getRemainingMillis(String tableCode) {
         String key = normalizeKey(tableCode);
         if (!tableExpiryTimes.containsKey(key)) {
-            long pendingExtra = pendingExtensionMillis.getOrDefault(key, 0L);
+            long pendingExtra = getPendingMillis(key);
             return ONE_HOUR_MILLIS + pendingExtra;
         }
         Long expiry = tableExpiryTimes.get(key);

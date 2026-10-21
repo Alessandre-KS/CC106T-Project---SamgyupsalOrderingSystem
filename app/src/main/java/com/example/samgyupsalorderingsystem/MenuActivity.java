@@ -589,9 +589,4 @@ public class MenuActivity extends AppCompatActivity {
             finish();
         }
     }
-
-    @Override
-    public void onBackPressed() {
-        handleBackPress();
-    }
 }

@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
                 String v = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
                 tvAppVersion.setText("Samgyupsal Ordering System • v" + v);
             } catch (Exception ignored) {
-                tvAppVersion.setText("Samgyupsal Ordering System • v1.0.6");
+                tvAppVersion.setText("Samgyupsal Ordering System • v1.0.7");
             }
         }
     }
