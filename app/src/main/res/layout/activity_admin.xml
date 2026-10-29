@@ -331,7 +331,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Samgyupsal Ordering System • v1.0.7"
+                android:text="Samgyupsal Ordering System • v1.0.8"
                 android:textColor="@color/text_muted"
                 android:textSize="12sp"
                 android:layout_marginTop="24dp"

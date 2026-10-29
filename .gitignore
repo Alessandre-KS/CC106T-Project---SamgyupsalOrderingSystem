@@ -1,6 +1,15 @@
 *.iml
 .gradle
 /local.properties
+
+# School Activity / Submission Files (Do NOT push to GitHub)
+pictures/
+*.docx
+*.pdf
+*SSMS*
+generate_doc.py
+*.lnk
+~$*
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
@@ -13,3 +22,12 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# School Activity / Submission Files (Do NOT push to GitHub)
+pictures/
+*.docx
+*.pdf
+*SSMS*
+generate_doc.py
+*.lnk
+~$*

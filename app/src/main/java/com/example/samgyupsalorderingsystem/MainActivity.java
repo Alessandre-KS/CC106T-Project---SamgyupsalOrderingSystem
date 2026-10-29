@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
                 String v = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
                 tvAppVersion.setText("Samgyupsal Ordering System • v" + v);
             } catch (Exception ignored) {
-                tvAppVersion.setText("Samgyupsal Ordering System • v1.0.7");
+                tvAppVersion.setText("Samgyupsal Ordering System • v1.0.8");
             }
         }
     }
@@ -226,8 +226,8 @@ public class MainActivity extends AppCompatActivity {
         ScanOptions options = new ScanOptions();
         options.setPrompt("Scan Table QR Code");
         options.setBeepEnabled(true);
-        options.setOrientationLocked(false);
-        options.setCaptureActivity(CaptureActivity.class);
+        options.setOrientationLocked(true);
+        options.setCaptureActivity(PortraitCaptureActivity.class);
         qrLauncher.launch(options);
     }
 
